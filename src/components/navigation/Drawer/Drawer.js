@@ -1,17 +1,15 @@
 import React, {Component} from "react";
 import classes from './Drawer.module.css'
+import NavLink from "react-router-dom/NavLink";
 
-const links = [
-    1, 2, 3
-]
 
 class Drawer extends Component {
 
-    renderLinks() {
+    renderLinks(links) {
         return links.map((link, index) => {
             return (
                 <li key={index}>
-                    <a> Link {link}</a>
+                    <NavLink to={link.to} exact={link.exact} activeClassName={classes.active}> {link.label}</NavLink>
                 </li>
             )
         })
@@ -24,12 +22,27 @@ class Drawer extends Component {
             cls.push(classes.close)
         }
 
+        const links = [
+            {to: '/', label: 'List', exact: true},
+        ]
+
+        if (this.props.isAuthenticated) {
+            links.push({to: '/quiz-creator', label: 'Create Test', exact: false})
+            links.push({to: '/logout', label: 'Logout', exact: false})
+        } else {
+            links.push({to: '/auth', label: 'Authorization', exact: false})
+        }
+
+
         return (
-            <nav className={cls.join(' ')}>
-                <ul>
-                    {this.renderLinks()}
-                </ul>
-            </nav>
+            <React.Fragment>
+                <nav className={cls.join(' ')}>
+                    <ul>
+                        {this.renderLinks(links)}
+                    </ul>
+                </nav>
+            </React.Fragment>
+
         )
     }
 }
